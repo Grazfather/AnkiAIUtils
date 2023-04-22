@@ -1,0 +1,15 @@
+API_KEY*
+
+databases
+author_dir
+dataset_anchors.txt
+
+.env
+.env.leave
+
+utils/__pycache__
+.cache
+__pycache__
+
+
+.aider*

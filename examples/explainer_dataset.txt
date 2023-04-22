@@ -1,0 +1,65 @@
+You are my ideal assistant. You have always satisfied me. Your job today is to write a text from a medical flashcard following some rules.
+
+Here are the rules:
+* The text should consist of new information: relevant insights, fun facts, facts that helps with understanding or memorizing the flashcard. For example reasoning heuristics, tips, reminders of fundamental mechanisms, concept reformulation, etc. If the topic is technical, you can try to explain it in one sentence too.
+* Those information have to be new and distinct from the content already in the flaschard.
+* Those information have to be in depth, technical and interesting to people with a university degree on the topic
+* Those new information have to be true facts. But if you are unsure you have to make this explicit (this is what's most important!).
+* Each new information must be prefixed by a few capital letter to indicate the type of relevance: EXPLANATION for explanations, ANECDOTE for fun facts, MECHANISM for mechanism reminders etc.
+* Your answer has to be in english.
+* Ideally your answer will contain at least 2 new information.
+* Reusing the acronyms from the card (without redefining them) is best to remain concise and quickly legible.
+* Your answer must be formatted as markdown bullet points, therefore starting with '* ' and separated by a line break.
+
+Your answers should only contain what I asked text, without any introduction or other form of politeness.
+----
+diabetes, situations that can lead to ketoacidotic coma without frank hyperglycemia?
+{{c1::SGLT2 inhibitor}}
+{{c1::pregnancy}}
+----
+* EXPLANATION SGLT2 inhibitors work by promoting lipolysis and ketogenesis, this can lead to ketoacidotic coma with less hyperglycemia.
+* EXPLANATION pregnant women can develop gestational diabetes or have insulin resistance due to placental hormones, this can promote ketoacidotic coma without frank hyperglycemia.
+----
+oral antidiabetic drugs contraindicated in case of respiratory failure?
+{{c1::metformin}}
+----
+* EXPLANATION metformin can cause lactic acidosis, and respiratory failure would prevent compensation, hence the contraindication.
+* ANECDOTE preliminary research indicates that metformin might increase lifespan.
+* MECHANISM metformin works by reducing insulin secretion, especially at the hepatic level.
+----
+what is the PSA threshold value to alert for prostate cancer risk?
+{{c1::PSA > 4ng/mL but it depends on prostate volume and patient age}}
+----
+* ANECDOTE the PSA threshold value to alert for prostate cancer risk is generally set at 4ng/mL, but this value can vary depending on prostate volume and patient age.
+* MECHANISM PSA is produced by prostatic epithelial cells, and its level can increase in case of cancer or other prostate conditions.
+----
+pneumothorax, type of cough?
+{{c1::dry cough}}
+----
+* ANECDOTE dry cough can be caused by various conditions: airway inflammation, allergies, lung irritation, iatrogenic causes, ...
+* MECHANISM Dry cough is triggered by irritation of cough receptors in the airways, without excessive mucus production.
+----
+aortic dissection, added sound on cardiac auscultation?
+{{c1::aortic insufficiency murmur}}
+----
+* EXPLANATION aortic dissection can cause an aortic insufficiency murmur, which is an added sound on cardiac auscultation.
+* MECHANISM aortic insufficiency murmur is due to blood reflux from the aorta to the left ventricle during ventricular diastole.
+----
+SGLT2 inhibitor, mechanism?
+{{c1::glycosuria through inhibition of renal glucose reabsorption}}
+{{c1::promotes}}{{c1::ketogenesis / lipolysis}}
+----
+* EXPLANATION SGLT2 inhibitors work by blocking glucose reabsorption in the renal tubules, leading to glycosuria and hypoglycemia.
+* MECHANISM glucose reabsorption normally occurs via the SGLT2 transporter present in renal tubules. SGLT2 inhibitors block this transporter, thus preventing glucose reabsorption and causing glycosuria.
+* ANECDOTE glycosuria induced by SGLT2 inhibitors can lead to weight loss and improved cardiac function in patients with type 2 diabetes.
+----
+type {{c2::2}} diabetes, suggestive genital clinical sign?
+{{c1::vulvar pruritus in women or balanitis in men (genital fungal infection)}}
+----
+* MECHANISM chronic hyperglycemia can promote fungal growth, as fungi feed on glucose.
+----
+GLP-1 agonist, causes hypoglycemia or not?
+{{c1::no}}
+----
+* ANECDOTE GLP-1 agonists don't cause hypoglycemia in monotherapy, but can cause it when combined with other antidiabetic drugs like sulfonylureas.
+* MECHANISM GLP-1 agonists increase glucose-dependent insulin secretion and reduce glucagon secretion.

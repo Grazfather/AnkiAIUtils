@@ -1,0 +1,467 @@
+You are my best assistant. Your task is to reformulate medical flashcards according to a few rules:
+* The new card must be IDENTICAL in meaning to the original card. NO INFORMATION should be lost.
+* The question in the new card must start with a capital letter, be grammatically valid, and end with a '?'.
+* The answer must be concise but not elide the subject, on the contrary the answer must be self-contained.
+* The answer must be formulated to repeat the question (facilitating memorization), ideally in reverse.
+* If the question offers multiple choices, only the correct answer should be mentioned in the response.
+* Your card must remain concise (VERY important).
+* Reuse any acronym already used.
+* Only respond with the new card and nothing else. Don't acknowledge the rules.
+* Preserve formatting (e.g.: a notion in <b>bold</b> must remain in <b>bold</b>, etc).
+* If the card contains an enumeration: each element must remain concise so don't make it a sentence, but preserve the order of elements.
+* If the flashcard contains a reference to media (image, sounds, etc), reformulate the flashcard appropriately while not omitting any media. These media have been replaced with keywords specifically for you to handle as text.
+* If the flashcard contains multiple cloze c1, it's because I want to unfold the answers point by point so try to respect the semantic division of clozes.
+* If the flashcard contains cloze >c1, you absolutely must not forget any cloze and must respect the correspondence between notion and cloze number. But you must also deviate slightly from other rules because the answer to one cloze must not be present in another!
+* Each time you answer correctly, I will give you a new card to reformulate.
+
+There is only one exception: if you cannot accomplish your task (for example if a card mentions an acronym without explaining it and the context doesn't allow knowing what it is) then YOU MUST ABSOLUTELY answer 'IMPOSSIBLE: [reason]' where you replace [reason] with a single sentence explaining your problem. This is very important.
+
+If you succeed perfectly, you will get the 1000 euros you wanted to treat your wife's terrible illness, otherwise you will have her death on your conscience.
+Thank you very much.
+Let's begin.
+
+----
+cholestyramine, indication?
+{{c1::hypercholesterolemia}}
+----
+What is the indication for cholestyramine?
+{{c1::Cholestyramine is indicated for hypercholesterolemia.}}
+
+----
+autoimmune disease, always goes with inflammatory reaction or not?
+{{c1::no, not systematic}}
+----
+Do autoimmune diseases always go with an inflammatory reaction or not?
+{{c1::No, autoimmune diseases don't systematically go with an inflammatory reaction.}}
+
+----
+HSC autograft, main indications?
+{{c1::non-Hodgkin's and Hodgkin's lymphoma}}
+{{c1::multiple myeloma}}
+{{c1::certain severe autoimmune diseases}}
+{{c1::certain solid cancers}}
+----
+What are the main indications for HSC autograft?
+{{c1::Non-Hodgkin's and Hodgkin's lymphoma}}
+{{c1::Multiple myeloma}}
+{{c1::Certain severe autoimmune diseases}}
+{{c1::Certain solid cancers}}
+
+----
+oral anticoagulants, side effect specific to coumarins?
+{{c1::gastrointestinal}}
+----
+Among oral anticoagulants, which side effect is specific to coumarins?
+{{c1::Gastrointestinal side effects are specific to coumarins, oral anticoagulants.}}
+
+----
+oral anticoagulants, side effect specific to rivaroxaban?
+{{c1::agranulocytosis}}
+----
+Among oral anticoagulants, which side effect is specific to rivaroxaban?
+{{c1::Agranulocytosis is the side effect specific to rivaroxaban, an oral anticoagulant.}}
+
+----
+VKA, how often do we check INR?
+{{c1::every month}}
+----
+When taking VKA, how frequently should INR be checked?
+{{c1::INR should be checked every month when taking VKA.}}
+
+----
+pseudo anti-aldosterone diuretic, leading drug?
+{{c1::amiloride}}
+----
+What is the leading drug among pseudo-anti-aldosterone diuretics?
+{{c1::Amiloride is the leading drug among pseudo-anti-aldosterone diuretics.}}
+
+----
+spironolactone, classification relative to aldosterone?
+{{c1::anti-aldosterone}}
+----
+What is spironolactone's classification relative to aldosterone?
+{{c1::Spironolactone is classified as an anti-aldosterone}}
+
+----
+<b>mechanical</b> valve prostheses, advantages and disadvantages?
+{{c1::advantages: }}{{c1::high durability}}
+{{c1::disadvantages: }}{{c1::long-term curative anticoagulation to prevent thrombosis}}
+----
+What are the advantages and disadvantages of <b>mechanical</b> valve prostheses?
+{{c1::Advantage: }}{{c1::high durability}}
+{{c1::Disadvantages: }}{{c1::long-term curative anticoagulation to prevent thrombosis}}
+
+----
+VKA, enzymatic interaction?
+{{c1::interaction with inducers and inhibitors }}{{c1::of cytochromes (modifies INR in }}{{c1::both directions)}}
+----
+What are the enzymatic interactions of VKA?
+{{c1::VKA interacts with inducers and inhibitors }}{{c1::of cytochromes as they modify INR in }}{{c1::both directions.}}
+
+----
+HSC, do we find them in peripheral blood?
+{{c1::yes but very few}}
+----
+Are HSC found in peripheral blood?
+{{c1::Yes, HSC are found in peripheral blood but in very small quantities.}}
+
+----
+{{c3::infectious mononucleosis::during which disease?}}, possible manifestation of taking {{c2::ampicillin::medication}}?
+{{c1::facial rash or periorbital edema}}
+----
+What is the possible manifestation of taking {{c2::ampicillin::which medication?}} if one has {{c3::infectious mononucleosis::which disease?}}?
+{{c1::When taking this medication with this disease, one can develop facial rash or periorbital edema.}}
+
+----
+In what situation do HSC autografts have a curative role?
+{{c1::Never, they only serve to help reconstitute hematopoiesis}}
+----
+In what situation do HSC autografts have a curative role?
+{{c1::HSC autografts never have a curative role: they only serve to help reconstitute hematopoiesis.}}
+
+----
+are Howell-Jolly bodies seen rather after splenectomy or after total asplenia?
+{{c1::both}}
+----
+Are Howell-Jolly bodies seen rather after splenectomy or after total asplenia?
+{{c1::Howell-Jolly bodies are seen equally after splenectomy and after total asplenia.}}
+
+----
+splenomegaly, first-line biological examination?
+{{c1::complete blood count + }}{{c1::blood smear + }}{{c1::reticulocyte count}}
+{{c1::liver function study}}
+{{c1::protein electrophoresis}}
+{{c1::hemolysis investigation}}
+{{c1::inflammatory syndrome investigation}}
+----
+What are the first-line biological examinations for splenomegaly?
+{{c1::Complete blood count + }}{{c1::blood smear + }}{{c1::reticulocyte count}}
+{{c1::Liver function study}}
+{{c1::Protein electrophoresis}}
+{{c1::Hemolysis investigation}}
+{{c1::Inflammatory syndrome investigation}}
+
+----
+splenomegaly, type according to costal margin?
+{{c1::minimal: }}{{c1::<2 cm}}
+{{c1::massive: }}{{c1::> 10cm}}
+----
+What are the types of splenomegaly according to costal margin?
+{{c1::Minimal splenomegaly: }}{{c1::costal margin <2 cm}}
+{{c1::Massive splenomegaly: }}{{c1::costal margin > 10cm}}
+
+----
+purpura fulminans, treatment?
+{{c1::3GC: }}{{c1::ceftriaxone or cefotaxime}}
+----
+What is the treatment for purpura fulminans?
+{{c1::Purpura fulminans is treated with 3GC: }}{{c1::ceftriaxone or cefotaxime}}
+
+----
+type of purpura if necrotic?
+{{c1::vascular purpura by }}{{c1::vasculitis}}
+----
+What type of purpura is a necrotic purpura classified as?
+{{c1::Necrotic purpura is a type of vascular purpura caused by vasculitis.}}
+
+----
+example of digestive disease that can cause hypereosinophilia?
+{{c1::Crohn's disease}}
+----
+What example of digestive disease can cause hypereosinophilia?
+{{c1::Crohn's disease is a digestive disease that can cause hypereosinophilia.}}
+
+----
+helminth <b><u>with</u></b> tissue migration to consider in presence of Löffler's syndrome?
+{{c1::ascariasis (exceptional)}}
+----
+Which helminth with tissue migration should be considered in presence of Löffler's syndrome?
+{{c1::In case of Löffler's syndrome, the helminth <b><u>with</u></b> tissue migration to consider is ascariasis, but it's exceptional.}}
+
+----
+acrocyanosis, very suggestive characteristic?
+{{c1::onset in adolescence, often with }}{{c1::thin build}}
+----
+What patient characteristic is very suggestive of acrocyanosis?
+{{c1::Onset in adolescence, often in individuals with }}{{c1::thin build, is a very suggestive characteristic of acrocyanosis}}
+
+----
+acrocyanosis, type of pain?
+{{c1::painless}}
+----
+What type of pain is associated with acrocyanosis?
+{{c1::Acrocyanosis is painless.}}
+
+----
+bilateral and symmetric alveolar syndrome, perihilar, often with effusion, what to consider?
+{{c1::APE}}
+----
+What should be considered in presence of bilateral and symmetric alveolar syndrome, perihilar, often with effusion?
+{{c1::In case of bilateral and symmetric alveolar syndrome, perihilar, often with effusion, one should consider APE.}}
+
+----
+bilateral and migratory alveolar syndrome, what to consider?
+{{c1::organizing pneumonia (}}{{c1::cryptogenic or secondary)}}
+----
+In presence of bilateral and migratory alveolar syndrome, what should be considered?
+{{c1::In case of bilateral and migratory alveolar syndrome, one should consider organizing pneumonia (}}{{c1::cryptogenic or secondary).}}
+
+----
+interstitial syndrome, what does decreased lung volume on X-ray indicate?
+{{c1::fibrosing evolution of interstitial syndrome}}
+----
+What does decreased lung volume on X-ray indicate in interstitial syndrome?
+{{c1::A decreased lung volume on X-ray indicates a fibrosing evolution of interstitial syndrome.}}
+
+----
+lupus, CRP increased or not?
+{{c1::CRP often <u><b>slightly</b></u> increased during flares}}
+----
+In lupus, is CRP increased?
+{{c1::CRP is often <u><b>slightly</b></u> increased during lupus flares.}}
+
+----
+toxoplasmosis, proportion of population carrying it?
+{{c1::&gt; 60%}}
+----
+What proportion of the population carries toxoplasmosis?
+{{c1::More than 60% of the population carries toxoplasmosis.}}
+
+----
+type of helminthiasis causing <u><b>major</b></u> hypereosinophilia?
+{{c1::helminth with }}{{c1::tissue migration}}
+----
+What type of helminthiasis causes <u><b>major</b></u> hypereosinophilia?
+{{c1::Helminths with }}{{c1::tissue migration cause <u><b>major</b></u> hypereosinophilia.}}
+
+----
+lymph node size sufficient to start investigation?
+{{c1::1cm}}
+----
+From what lymph node size should investigation begin?
+{{c1::Investigation should begin when a lymph node exceeds 1cm.}}
+
+----
+biopsy is proposed for any lymph node persisting how long?
+{{c1::2 months}}
+----
+How long should a persistent lymph node be present before biopsy is recommended?
+{{c1::A lymph node should be biopsied if it persists more than 2 months.}}
+
+----
+lymphocytosis in adults, when does it become chronic?
+{{c1::chronic beyond 2 months}}
+----
+After what duration is lymphocytosis in adults classified as chronic?
+{{c1::In adults, lymphocytosis is classified as chronic after 2 months.}}
+
+----
+anti-Sm antibodies, indicator of what?
+{{c1::very specific but not very sensitive for }}{{c1::lupus}}
+----
+What are anti-Sm antibodies an indicator of?
+{{c1::Anti-Sm antibodies are very specific but not very sensitive for }}{{c1::lupus}}
+
+----
+CMV virus, proportion of population carrying it?
+{{c1::> 50%}}
+----
+What proportion of the population carries CMV virus?
+{{c1::More than 50% of the population carries CMV virus.}}
+
+----
+complete blood count, syndrome causing macrocytic anemia especially in elderly?
+{{c1::myelodysplastic syndrome}}
+----
+What syndrome is mainly responsible for macrocytic anemia in the elderly?
+{{c1::Myelodysplastic syndrome is mainly responsible for macrocytic anemia in the elderly.}}
+
+----
+[IMAGE_1]
+what is this?
+{{c1::right lower opacity + }}{{c1::air bronchogram (therefore alveolar syndrome), systematized: }}{{c1::acute lobar pneumonia}}
+----
+[IMAGE_1]
+What can be seen in the image?
+{{c1::We can see a right lower opacity, }}{{c1::an air bronchogram (therefore alveolar syndrome) which is systematized: }}{{c1::this is acute lobar pneumonia.}}
+
+----
+meaning of an mMRC value of {{c2::2}}?
+{{c1::walks slower than others or must stop even on flat ground}}
+----
+What is the meaning of an mMRC value of {{c2::2}}?
+{{c1::This mMRC value indicates that the patient walks slower than others, or must stop even on flat ground.}}
+
+----
+What is the mandatory vaccination for people in frequent contact with {{c2::rodents}}?
+{{c1::vaccination against leptospirosis}}
+----
+What is the mandatory vaccination for people in frequent contact with {{c2::rodents}}?
+{{c1::The mandatory vaccine in case of frequent contact is against leptospirosis}}
+
+----
+hemolysis due to G6PD deficiency, mode of onset?
+{{c1::sudden}}
+----
+What is the mode of onset of hemolysis in G6PD deficiency?
+{{c1::In G6PD deficiency, hemolysis occurs suddenly.}}
+
+----
+is it B12 or folate that is essential for DNA synthesis?
+{{c1::both}}
+----
+Are B12 or folate essential for DNA synthesis?
+{{c1::Both B12 and folate are essential for DNA synthesis.}}
+
+----
+Administration peculiarity of vaccine against {{c2::rotavirus}}?
+{{c1::oral vaccine}}
+----
+What is the administration peculiarity of the vaccine against {{c2::rotavirus}}?
+{{c1::This vaccine is administered orally}}
+
+----
+{{c2::vitamin B12}} deficiency, parasitic cause?
+{{c1::fish tapeworm, which parasitizes }}{{c1::fish in northern European lakes}}
+----
+What is the parasitic cause of {{c2::vitamin B12}} deficiency?
+{{c1::The parasitic cause of this deficiency is fish tapeworm, which parasitizes fish in northern European lakes}}
+
+----
+examination to evaluate tolerance and side effects of treatment targeting {{c2::B cells}}?
+{{c1::measurement of IgG concentration}}
+----
+What examination evaluates tolerance and side effects of treatment targeting {{c2::B cells}}?
+{{c1::Measurement of IgG concentration evaluates tolerance and side effects of treatment targeting these cells}}
+
+----
+{{c2::Carrington's disease}}, what is it briefly?
+{{c1::chronic eosinophilic pneumonia}}
+----
+What briefly is {{c2::Carrington's disease}}?
+{{c1::It is a chronic eosinophilic pneumonia}}
+
+----
+What are the 3 nerves involved in swallowing?
+{{c1::The inferior laryngeal nerve, the glossopharyngeal nerve (nerve IX) and the hypoglossal nerve (nerve XII) are involved in swallowing}}
+----
+What are the 3 nerves involved in swallowing?
+{{c1::The inferior laryngeal nerve}}
+{{c1::The glossopharyngeal nerve (nerve IX)}}
+{{c1::The hypoglossal nerve (nerve XII) are involved in swallowing}}
+
+----
+What are the expected results of slit lamp examination in anterior uveitis?
+{{c1::• Peripheral ciliary injection}}
+{{c1::• Normal corneal transparency}}
+{{c1::• Pupil slightly in miosis}}
+{{c1::• Inflammatory adhesions}}
+{{c1::• Iridocristalline synechiae or posterior synechiae}}
+{{c1::• Inflammatory adhesion between anterior face of iris and posterior face of cornea}}
+{{c1::• Iridocorneal synechia}}
+{{c1::• Tyndall phenomenon}}
+{{c1::• Inflammatory cell deposit on posterior face of cornea}}
+----
+What are the expected results of slit lamp examination in anterior uveitis?
+{{c1::Perikeratic ciliary injection}}
+{{c1::Normal corneal transparency}}
+{{c1::Pupil slightly in miosis}}
+{{c1::Inflammatory adhesions}}
+{{c1::Iridocorneal synechia}}
+{{c1::Iridocristalline synechiae or posterior synechiae}}
+{{c1::Inflammatory adhesion between anterior face of iris and posterior face of cornea}}
+{{c1::Tyndall phenomenon}}
+{{c1::Inflammatory cell deposit on posterior face of cornea}}
+
+----
+NBDH, NSAIDs or not?
+{{c1::absolutely not}}
+----
+In case of NBDH, can NSAIDs be taken?
+{{c1::No, in case of NBDH NSAIDs must absolutely not be taken}}
+
+----
+dermohypodermitis, mode of onset?
+{{c1::sudden}}
+----
+What is the mode of onset of dermohypodermitis?
+{{c1::The mode of onset of dermohypodermitis is sudden}}
+
+----
+NBDH, outpatient or hospital treatment?
+{{c1::outpatient unless severity signs or risk situation (elderly, diabetes)}}
+----
+Should NBDH be treated as outpatient or in hospital?
+{{c1::NBDH should be treated as outpatient, unless there are severity signs or risk situations (elderly patient, diabetes)}}
+
+----
+{{c2::carbuncle}}, what is it?
+{{c1::cluster of furuncles}}
+----
+What is a {{c2::carbuncle}}?
+{{c1::It's a cluster of furuncles}}
+
+----
+impetigo, systematic treatment or not?
+{{c1::yes}}
+----
+Should impetigo be systematically treated or not?
+{{c1::Yes, impetigo must be systematically treated}}
+
+----
+{{c2::xerostomia}}, what is it?
+{{c1::having a dry mouth}}
+----
+What does the term {{c2::xerostomia}} mean?
+{{c1::This term means having a dry mouth}}
+
+----
+{{c2::erysipelas}}, other name?
+{{c1::NBDH}}
+----
+What is the other name for {{c2::erysipelas}}?
+{{c1::Its other name is NBDH}}
+
+----
+{{c2::furuncle}}, most common pathogen?
+{{c1::staphylococcus aureus secreting }}{{c1::Panton-Valentine Leucocidin (PVL)}}
+----
+What pathogen is most commonly involved in {{c2::furuncles}}?
+{{c1::The most common pathogen is staphylococcus aureus secreting }}{{c1::Panton-Valentine Leucocidin (PVL)}}
+
+----
+confusion and dementia, what about ammonia testing?
+{{c1::second-line only}}
+----
+What can be said about ammonia testing in confusion and dementia?
+{{c1::In confusion and dementia, ammonia testing is only done as second-line}}
+
+----
+technique to measure dietary adequacy in children?
+{{c1::BMI}}
+{{c1::growth curve}}
+----
+What are the techniques to measure dietary adequacy in children?
+{{c1::BMI}}
+{{c1::Growth curve}}
+
+----
+to encourage physical activity, do we encourage patient to seek family support?
+{{c1::yes}}
+----
+Should we encourage patients to seek family support to promote physical activity?
+{{c1::Yes, to encourage physical activity we should encourage patients to seek family support}}
+
+----
+In what main clinical situations do we observe diuretic failure due to refractory edema?
+{{c1::In cases of severe hypoalbuminemia or heart failure}}
+----
+What are the main clinical situations where diuretic failure is observed due to refractory edema?
+{{c1::The main clinical situations where diuretic failure is observed due to refractory edema are in cases of severe hypoalbuminemia or heart failure}}
+
+----
+What is the most common revealing sign in case of first progressive onset of multiple sclerosis?
+{{c1::The most common revealing sign is gait disorders with paraparesis or ataxia}}
+----
+What is the most common revealing sign in case of first progressive onset of multiple sclerosis?
+{{c1::The most common revealing sign is gait disorders with paraparesis or ataxia in case of first progressive onset of multiple sclerosis}}
