@@ -116,14 +116,25 @@ The reformulator would improve it to:
 ```
 What should be considered in presence of bilateral and symmetric alveolar syndrome, perihilar, often with effusion?
 {{c1::In case of bilateral and symmetric alveolar syndrome, perihilar, often with effusion, one should consider APE.}}
-```
 
-Note how the reformulation:
-- Makes the question grammatically complete and clear
-- Structures it as a proper question
-- Makes the answer self-contained by repeating key context
-- Preserves the exact medical terminology
-- Maintains the cloze deletion format
+The reformulator can also make cards more concise when needed. For example, it could reformat the same card as:
+
+Key features of bilateral and symmetric alveolar syndrome, perihilar, often with effusion:
+- {{c1::Consider APE}}
+
+The true power of the reformulator lies in its flexibility - your imagination is the only limit. It can:
+- Make questions grammatically complete and clear
+- Structure content as proper questions, bullet points, tables, or any format you prefer
+- Make answers self-contained by repeating key context when needed
+- Adjust verbosity from concise summaries to detailed explanations
+- Preserve exact medical terminology while improving clarity
+- Maintain cloze deletion format while enhancing content
+- Adapt to any formatting style (paragraphs, lists, diagrams, etc.)
+- Transform content into mnemonics, analogies, or memory palaces
+- Create hierarchical structures for complex topics
+- Generate multiple variations to strengthen recall through interleaving
+
+The reformulator is not just a tool for fixing poorly worded cards - it's a creative partner that can help you explore new ways to structure and present information. Whether you want to create visual mind maps, build memory palaces, or develop unique mnemonic systems, the reformulator can help bring your ideas to life while maintaining the integrity of your Anki cards.
 
 </details>
 
