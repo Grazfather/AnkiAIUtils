@@ -351,6 +351,23 @@ The `examples/` folder contains example files to help you get started. Note that
 - `reformulator_dataset.txt`: Examples for card reformulation
 - `string_formatting.py`: Handles cloze deletions and text formatting
 
+### Aren't you concerned about LLM hallucinations?
+
+While hallucinations are a valid concern when using LLMs as search engines or relying on their compressed inner knowledge, these tools take a different approach that minimizes this risk:
+
+1. **Few-shot Learning**: By providing carefully crafted examples, we guide the LLM to follow specific patterns and formats, reducing the chance of inventing information.
+
+2. **Structured Output**: The tools enforce strict output formats that make hallucinations easier to detect and correct.
+
+3. **Preservation of Source Material**: Rather than generating new facts, the tools focus on reformulating and enhancing existing content from your cards.
+
+4. **Model Agnosticism**: As new, more reliable models emerge, you can easily switch to them without changing your workflow.
+
+
+5. **Specialization**: By focusing on specific tasks (reformulation, mnemonic creation, etc.), we reduce the scope for hallucinations compared to general-purpose chat.
+
+While no system is perfect, this approach has proven reliable through extensive testing during medical school. As LLMs continue to improve, we can expect hallucinations to become increasingly rare.
+
 ### What's the format of dataset files?
 Dataset files (like `explainer_dataset.txt`, `reformulator_dataset.txt`, etc.) are simple text files where messages are separated by `----`. The first message is assumed to be a system prompt, followed by alternating user and assistant messages. This format mirrors a typical LLM conversation flow while remaining easy to read and edit.
 
