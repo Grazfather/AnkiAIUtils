@@ -116,6 +116,7 @@ The reformulator would improve it to:
 ```
 What should be considered in presence of bilateral and symmetric alveolar syndrome, perihilar, often with effusion?
 {{c1::In case of bilateral and symmetric alveolar syndrome, perihilar, often with effusion, one should consider APE.}}
+```
 
 The reformulator can also make cards more concise when needed. For example, it could reformat the same card as:
 
