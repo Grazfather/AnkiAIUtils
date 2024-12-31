@@ -551,7 +551,14 @@ Click to read more
 <!-- BEGIN_TODO -->
 - turn those scripts into addons
 - ### Applies to all tools
-- use beartype everywhere
+- use toml instead of json? it allows setting comments too
+- make it installable with a setup.py on pypi
+- use beartype everywhere for statyc typing and code cleanliness
+- do a unique class that could be used to unify all those codes
+    - arguments:
+        - name (to differentiate each children: for example "illustrator")
+        - string_format (can be overloaded)
+        - in the init, check that indeed there is a version attribute
 - add an arg to include tags or not in the LLM context for a given note, as otherwise the LLM can get confused by some acronyms
     - but with a regex arg to keep only the tags that match the regex. This way we can keep only a portion of them for the LLM
 - store all inference in a compressed sqlite db instead of a json. It gets too large
@@ -559,14 +566,6 @@ Click to read more
 - actually there's no need to store the "Done" tags because all important info is stored in the field
 - use xml formatting for the examples
     - make use of <thinking> tags too
-- make it installable with a setup.py on pypi
-- add images to illustrate the benefits of using each
-- do a unique class that could be used to unify all those codes
-    - arguments:
-        - name (to differentiate each children: for example "illustrator")
-        - string_format (can be overloaded)
-        - in the init, check that indeed there is a version attribute
-- use toml instead of json, it allows setting comments too
 - tell user how much time each answer took
 -
 - ### Mnemonics Creator
@@ -597,7 +596,7 @@ Click to read more
 - use an eval llm like in [wdoc](https://wdoc.readthedocs.io/en/latest/) to better filer an anki query
     - actually wdoc can already be used for that! Maybe it should be converted into an addon?
 -
-- # Tagger (In project)
+- ### Tagger (In project)
 - always prepend tags by ankitagger: but customizable
 - always sort those tags by alphabetical order
 - add modes:
