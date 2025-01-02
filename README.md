@@ -551,6 +551,7 @@ Click to read more
 <!-- BEGIN_TODO -->
 - turn those scripts into addons
 - ### Applies to all tools
+- load API keys from env variable instead
 - use toml instead of json? it allows setting comments too
 - make it installable with a setup.py on pypi
 - use beartype everywhere for statyc typing and code cleanliness
