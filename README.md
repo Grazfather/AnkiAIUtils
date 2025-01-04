@@ -6,6 +6,8 @@ A powerful suite of AI-powered tools to enhance your [Anki](https://en.wikipedia
 ### Simple example
 **Those scripts make it so that every failed note will automatically have new fields containing explanations, mnemonics, and illustrations.** This is done in a way that respects **your own mnemonics**, can even use the [major system](https://en.wikipedia.org/wiki/Mnemonic_major_system), and has **many** more features.
 
+An example of the kind of workflow that AnkiIllustrator facilitates, watch [pixorise's youtube channel](https://www.youtube.com/watch?v=QzxHpjryJHg0) which is full of great image mnmemonics, particularly appropriate for mental palace types of learning.
+
 ## Developer's note / call for help
 This collection of scripts is the culmination of my efforts to contributes the AI features I wish existed when I started medical school. All scripts should be working but I released them hastily after documenting them heavily with the help of [aider](https://aider.chat/). It is possible that some aspects of the documentation is slightly off or imprecise. It is also possible that some of the scripts where slighly broken during the release process. In any case, **by releasing this project made with love and care my hope is to motivate others to package it into addons.** I have too little time to learn how to package those scripts into addons and make the appropriate GUI so any help is absolutely welcome. To that end, please take a look at the TODO list below and open an isue!
 
@@ -35,6 +37,8 @@ Creates custom mnemonic images for your cards using AI image generation. It:
 - Handles multiple images per card with consistent layout
 
 Perfect for visual learners or complex topics that benefit from imagery.
+
+An example of the kind of workflow that AnkiIllustrator facilitates, watch [pixorise's youtube channel](https://www.youtube.com/watch?v=QzxHpjryJHg0) which is full of great image mnmemonics, particularly appropriate for mental palace types of learning.
 
 <details>
 <summary>
