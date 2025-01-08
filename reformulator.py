@@ -31,7 +31,7 @@ import pandas as pd
 import litellm
 
 from utils.misc import load_formatting_funcs, replace_media
-from utils.llm import load_api_keys, llm_price, tkn_len, chat, model_name_matcher
+from utils.llm import llm_price, tkn_len, chat, model_name_matcher
 from utils.anki import anki, sync_anki, addtags, removetags, updatenote
 from utils.logger import create_loggers
 from utils.datasets import load_dataset, semantic_prompt_filtering
@@ -50,9 +50,6 @@ whi, yel, red = create_loggers(log_file, ["white", "yellow", "red"])
 # get today's date for the logging and tags
 d = datetime.datetime.today()
 today = f"{d.day:02d}_{d.month:02d}_{d.year:04d}"
-
-whi("Loading api keys")
-load_api_keys()
 
 
 # status string

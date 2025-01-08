@@ -387,7 +387,7 @@ Dataset files (like `explainer_dataset.txt`, `reformulator_dataset.txt`, etc.) a
 Click to read more
 </summary>
 
-First, create an _API_KEYS/_ directory and place your API key in a separate file, or ensure that you API keys are set in you env variables.
+First, ensure that you API keys are set in you env variables.
 
 Next, install the [AnkiConnect](https://ankiweb.net/shared/info/2055492159) Anki addon if you don't already have it.
 

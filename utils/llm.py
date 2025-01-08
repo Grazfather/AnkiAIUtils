@@ -13,30 +13,6 @@ from .shared import shared
 
 litellm.drop_params = True
 
-def load_api_keys() -> Dict:
-    """Load API keys from files in the API_KEYS directory.
-
-    Creates API_KEYS directory if it doesn't exist.
-    Each file in API_KEYS/ should contain a single API key.
-    The filename (without extension) becomes part of the environment variable name.
-
-    Returns
-    -------
-    Dict
-        Dictionary mapping environment variable names to API key values
-    """
-    Path("API_KEYS").mkdir(exist_ok=True)
-    if not list(Path("API_KEYS").iterdir()):
-        shared.red("## No API_KEYS found in API_KEYS")
-        raise Exception("Need to write API KEYS to API_KEYS/")
-    api_keys = {}
-    for apifile in Path("API_KEYS").iterdir():
-        keyname = f"{apifile.stem.upper()}_API_KEY"
-        key = apifile.read_text().strip()
-        os.environ[keyname] = key
-        api_keys[keyname] = key
-    return api_keys
-
 
 llm_price = {}
 for k, v in litellm.model_cost.items():
