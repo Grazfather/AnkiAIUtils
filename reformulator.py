@@ -210,8 +210,7 @@ class AnkiReformulator:
         litellm.set_verbose = verbose
 
         # arg sanity check and storing
-        # TODO: Is this needed? The example in the readme doesn't set it
-        # assert "note:" in query, f"You have to specify a notetype in the query ({query})"
+        assert "note:" in query, f"You have to specify a notetype in the query ({query})"
         assert mode in ["reformulate", "reset"], "Invalid value for 'mode'"
         assert isinstance(exclude_done, bool), "exclude_done must be a boolean"
         assert isinstance(exclude_version, bool), "exclude_version must be a boolean"
@@ -266,21 +265,26 @@ class AnkiReformulator:
                 query += f" -AnkiReformulator:\"*version*=*'{self.VERSION}'*\""
 
         # load db just in case
+        self.db_content = self.load_db()
+        if not self.db_content:
+            red("Empty database. If you have already ran anki_reformulator "
+                "before then something went wrong!")
+            whi("Trying to create a new database")
+            self.save_to_db({})
+            self.db_content = self.load_db()
+            assert self.db_content, "Could not create database"
 
-        # TODO: How is the user supposed to create the database in the first place?
-        # self.db_content = self.load_db()
-        # if not self.db_content:
-        #     red("Empty database. If you have already ran anki_reformulator "
-        #         "before then something went wrong!")
-        # else:
-        #     self.compute_cost(self.db_content)
+        # TODO: What should be in the database normally? This fails with an empty database
+        whi("Computing estimated costs")
+        # self.compute_cost(self.db_content)
 
         # load dataset
+        whi("Loading dataset")
         dataset = load_dataset(dataset_path)
-        # check that each note is valid but exclude the system prompt
-        for id, d in enumerate(dataset):
-            if id != 0:
-                dataset[id]["content"] = self.cloze_input_parser(d["content"]) if iscloze(d["content"]) else d["content"]
+        # check that each note is valid but exclude the system prompt, which is
+        # the first entry
+        for id, d in enumerate(dataset[1:]):
+            dataset[id]["content"] = self.cloze_input_parser(d["content"]) if iscloze(d["content"]) else d["content"]
         assert len(dataset) % 2 == 1, "Even number of examples in dataset"
         self.dataset = dataset
 
@@ -293,15 +297,17 @@ class AnkiReformulator:
         if nids:
             red(f"Found {len(nids)} notes with tag AnkiReformulator::DOING : {nids}")
 
-        # find notes ids for the first time
-        nids = anki(action="findNotes", query=query)
+        # find notes ids for the specific note type
+        nids = anki(action="findNotes", query="note:AnkiAITest")
+        # nids = anki(action="findNotes", query=query)
         assert nids, f"No notes found for the query '{query}'"
 
-        # find the model field names
+        # find the field names for this note type
         fields = anki(action="notesInfo",
                       notes=[int(nids[0])])[0]["fields"]
-        # assert "AnkiReformulator" in fields.keys(), \
-        #         "The notetype to edit must have a field called 'AnkiReformulator'"
+        assert "AnkiReformulator" in fields.keys(), \
+                "The notetype to edit must have a field called 'AnkiReformulator'"
+        # NOTE: This gets the first field. Is that what we want? Or do we specifically want the AnkiReformulator field?
         self.field_name = list(fields.keys())[0]
 
         if self.exclude_media:
@@ -323,13 +329,13 @@ class AnkiReformulator:
             anki(action="notesInfo", notes=nids)
         ).set_index("noteId")
         self.notes = self.notes.loc[nids]
-        assert not self.notes.empty, "Empty notes df"
+        assert not self.notes.empty, "Empty notes"
 
         assert len(set(self.notes["modelName"].tolist())) == 1, \
                 "Contains more than 1 note type"
 
         # check absence of image and sounds in the main field
-        # as well incorrect tags
+        # as well as incorrect tags
         for nid, note in self.notes.iterrows():
             if self.exclude_media:
                 _, media = replace_media(
@@ -355,35 +361,23 @@ class AnkiReformulator:
                     assert not tag.lower().startswith("ankireformulator")
 
         # check if too many tokens
-        tkn_sum = sum([tkn_len(d["content"]) for d in self.dataset])
-        tkn_sum += sum(
-                tkn_len(
-                    replace_media(
-                        content=note["fields"][self.field_name]["value"],
-                        media=None,
-                        mode="remove_media",
-                    )[0]
-                )
-                for _, note in self.notes.iterrows()
-            )
-        if tkn_sum > tkn_warn_limit:
-            raise Exception(
-                f"Found {tkn_sum} tokens to process, which is "
-                f"higher than the limit of {tkn_warn_limit}"
-            )
+        tkn_sum = sum(tkn_len(d["content"]) for d in self.dataset)
+        tkn_sum += sum(tkn_len(replace_media(content=note["fields"][self.field_name]["value"],
+                                             media=None,
+                                             mode="remove_media")[0])
+                       for _, note in self.notes.iterrows())
+        assert tkn_sum <= tkn_warn_limit, (f"Found {tkn_sum} tokens to process, which is "
+                                           f"higher than the limit of {tkn_warn_limit}")
 
-        if len(self.notes) > n_note_limit:
-            raise Exception(
-                f"Found {len(self.notes)} notes to process "
-                f"which is higher than the limit of {n_note_limit}"
-            )
+        assert len(self.notes) <= n_note_limit, (f"Found {len(self.notes)} notes to process "
+                                                 f"which is higher than the limit of {n_note_limit}")
 
         if self.mode == "reformulate":
             func = self.reformulate
         elif self.mode == "reset":
             func = self.reset
         else:
-            raise ValueError(self.mode)
+            raise ValueError(f"Unknown mode {self.mode}")
 
         def error_wrapped_func(*args, **kwargs):
             """Wrapper that catches exceptions and marks failed notes with appropriate tags."""
@@ -407,11 +401,9 @@ class AnkiReformulator:
             )
         )
 
-        failed_runs = [
-            self.notes.iloc[i_nv]
-            for i_nv in range(len(new_values))
-            if isinstance(new_values[i_nv], str)
-        ]
+        failed_runs = [self.notes.iloc[i_nv]
+                       for i_nv in range(len(new_values))
+                       if isinstance(new_values[i_nv], str)]
         if failed_runs:
             red(f"Found {len(failed_runs)} failed notes")
             failed_run_index = pd.DataFrame(failed_runs).index
@@ -421,6 +413,7 @@ class AnkiReformulator:
             assert len(new_values) == len(self.notes)
 
         # applying the changes
+        whi("Applying changes")
         for values in tqdm(new_values, desc="Applying changes to anki"):
             if self.mode == "reformulate":
                 self.apply_reformulate(values)
@@ -429,8 +422,10 @@ class AnkiReformulator:
             else:
                 raise ValueError(self.mode)
 
+        whi("Clearing unused tags")
         anki(action="clearUnusedTags")
 
+        # TODO: Why add and them remove them?
         # add and remove the tag TODO to make it easier to re add by the user
         # as it was cleared by calling 'clearUnusedTags'
         nid, note = next(self.notes.iterrows())
@@ -439,7 +434,7 @@ class AnkiReformulator:
 
         sync_anki()
 
-        # display again the total cost at the end
+        # display the total cost again at the end
         db = self.load_db()
         assert db, "Empty database at the end of the run. Something went wrong?"
         self.compute_cost(db)
@@ -450,10 +445,11 @@ class AnkiReformulator:
         This is used to know if something went wrong.
         """
         n_db = len(db_content)
-        red(f"Number of entries in databases/reformulator.db: {n_db}")
+        red(f"Number of entries in databases/reforumulator/reformulator.db: {n_db}")
         dol_costs = []
         dol_missing = 0
         for dic in db_content:
+            # TODO: Mode isn't a field in the reformulator database dictionaries table
             if dic["mode"] != "reformulate":
                 continue
             try:
@@ -478,14 +474,14 @@ class AnkiReformulator:
 
     def reformulate(self, nid: int, note: pd.Series) -> Dict:
         """Generate a reformulated version of a note's content using an LLM.
-        
+
         Parameters
         ----------
         nid : int
             Note ID from Anki
         note : pd.Series
             Row from the notes DataFrame containing the note data
-            
+
         Returns
         -------
         Dict
@@ -622,7 +618,7 @@ class AnkiReformulator:
 
     def apply_reformulate(self, log: Dict) -> None:
         """Apply reformulation changes to an Anki note and update its metadata.
-        
+
         Parameters
         ----------
         log : Dict
@@ -692,14 +688,14 @@ class AnkiReformulator:
 
     def reset(self, nid: int, note: pd.Series) -> Dict:
         """Reset a note back to its state before reformulation.
-        
+
         Parameters
         ----------
         nid : int
             Note ID from Anki
         note : pd.Series
             Row from the notes DataFrame containing the note data
-            
+
         Returns
         -------
         Dict
@@ -873,7 +869,7 @@ class AnkiReformulator:
 
     def apply_reset(self, log: Dict) -> None:
         """Apply reset changes to an Anki note and update its metadata.
-        
+
         Parameters
         ----------
         log : Dict
@@ -940,12 +936,12 @@ class AnkiReformulator:
 
     def save_to_db(self, dictionnary: Dict) -> bool:
         """Save a log dictionary to the SQLite database.
-        
+
         Parameters
         ----------
         dictionnary : Dict
             Log dictionary to save
-            
+
         Returns
         -------
         bool
@@ -970,7 +966,7 @@ class AnkiReformulator:
 
     def load_db(self) -> Dict:
         """Load all log dictionaries from the SQLite database.
-        
+
         Returns
         -------
         Dict
@@ -999,5 +995,8 @@ if __name__ == "__main__":
             whi(f"Launching reformulator.py with args '{args}' and kwargs '{kwargs}'")
             AnkiReformulator(*args, **kwargs)
             sync_anki()
-    except Exception:
+    except AssertionError as e:
+        red(e)
+    except Exception as e:
+        red(e)
         raise
