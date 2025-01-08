@@ -51,6 +51,7 @@ whi, yel, red = create_loggers(log_file, ["white", "yellow", "red"])
 d = datetime.datetime.today()
 today = f"{d.day:02d}_{d.month:02d}_{d.year:04d}"
 
+whi("Loading api keys")
 load_api_keys()
 
 
@@ -184,7 +185,7 @@ class AnkiReformulator:
                     [print(line) for line in traceback.format_tb(exc_traceback)]
                     print(str(exc_value))
                     print(str(exc_type))
-                    print("\n--verbose was used so opening debug console at the "
+                    print("\n--debug was used so opening debug console at the "
                       "appropriate frame. Press 'c' to continue to the frame "
                       "of this print.")
                     pdb.post_mortem(exc_traceback)
@@ -203,13 +204,14 @@ class AnkiReformulator:
                 print(json.dumps(db_content, ensure_ascii=False, indent=4))
             return
         else:
-            sync_anki()
+            # sync_anki()
             assert query is not None, "Must specify --query"
             assert dataset_path is not None, "Must specify --dataset_path"
         litellm.set_verbose = verbose
 
         # arg sanity check and storing
-        assert "note:" in query, "You have to specify a notetype in the query"
+        # TODO: Is this needed? The example in the readme doesn't set it
+        # assert "note:" in query, f"You have to specify a notetype in the query ({query})"
         assert mode in ["reformulate", "reset"], "Invalid value for 'mode'"
         assert isinstance(exclude_done, bool), "exclude_done must be a boolean"
         assert isinstance(exclude_version, bool), "exclude_version must be a boolean"
@@ -225,7 +227,7 @@ class AnkiReformulator:
         main_field_index = int(main_field_index)
         assert main_field_index >= 0, "invalid field_index"
         self.mode = mode
-        if string_formatting is not None:
+        if string_formatting:
             red(f"Loading specific string formatting from {string_formatting}")
             cloze_input_parser, cloze_output_parser = load_formatting_funcs(
                     path=string_formatting,
@@ -264,14 +266,14 @@ class AnkiReformulator:
                 query += f" -AnkiReformulator:\"*version*=*'{self.VERSION}'*\""
 
         # load db just in case
-        self.db_content = self.load_db()
-        if not self.db_content:
-            red(
-                "Empty database. If you have already ran anki_reformulator "
-                "before then something went wrong!"
-            )
-        else:
-            self.compute_cost(self.db_content)
+
+        # TODO: How is the user supposed to create the database in the first place?
+        # self.db_content = self.load_db()
+        # if not self.db_content:
+        #     red("Empty database. If you have already ran anki_reformulator "
+        #         "before then something went wrong!")
+        # else:
+        #     self.compute_cost(self.db_content)
 
         # load dataset
         dataset = load_dataset(dataset_path)
@@ -286,9 +288,7 @@ class AnkiReformulator:
         nids = anki(action="findNotes",
                     query="tag:AnkiReformulator::RESETTING")
         if nids:
-            red(
-                f"Found {len(nids)} notes with tag AnkiReformulator::RESETTING : {nids}"
-            )
+            red(f"Found {len(nids)} notes with tag AnkiReformulator::RESETTING : {nids}")
         nids = anki(action="findNotes", query="tag:AnkiReformulator::DOING")
         if nids:
             red(f"Found {len(nids)} notes with tag AnkiReformulator::DOING : {nids}")
@@ -298,13 +298,10 @@ class AnkiReformulator:
         assert nids, f"No notes found for the query '{query}'"
 
         # find the model field names
-        fields = anki(
-            action="notesInfo",
-            notes=[int(nids[0])]
-            )[0]["fields"]
-        assert (
-            "AnkiReformulator" in fields.keys()
-        ), "The notetype to edit must have a field called 'AnkiReformulator'"
+        fields = anki(action="notesInfo",
+                      notes=[int(nids[0])])[0]["fields"]
+        # assert "AnkiReformulator" in fields.keys(), \
+        #         "The notetype to edit must have a field called 'AnkiReformulator'"
         self.field_name = list(fields.keys())[0]
 
         if self.exclude_media:
@@ -328,9 +325,8 @@ class AnkiReformulator:
         self.notes = self.notes.loc[nids]
         assert not self.notes.empty, "Empty notes df"
 
-        assert (
-            len(set(self.notes["modelName"].tolist())) == 1
-        ), "Contains more than 1 note type"
+        assert len(set(self.notes["modelName"].tolist())) == 1, \
+                "Contains more than 1 note type"
 
         # check absence of image and sounds in the main field
         # as well incorrect tags
@@ -358,11 +354,9 @@ class AnkiReformulator:
                 else:
                     assert not tag.lower().startswith("ankireformulator")
 
-
         # check if too many tokens
         tkn_sum = sum([tkn_len(d["content"]) for d in self.dataset])
         tkn_sum += sum(
-            [
                 tkn_len(
                     replace_media(
                         content=note["fields"][self.field_name]["value"],
@@ -371,7 +365,7 @@ class AnkiReformulator:
                     )[0]
                 )
                 for _, note in self.notes.iterrows()
-            ])
+            )
         if tkn_sum > tkn_warn_limit:
             raise Exception(
                 f"Found {tkn_sum} tokens to process, which is "
@@ -983,7 +977,7 @@ class AnkiReformulator:
             All log dictionaries from the database, or False if database not found
         """
         if not (REFORMULATOR_DIR / "reformulator.db").exists():
-            red("db not found: '$REFORMULATOR_DIR/reformulator.db'")
+            red(f"db not found: '{REFORMULATOR_DIR}/reformulator.db'")
             return False
         conn = sqlite3.connect(str((REFORMULATOR_DIR / "reformulator.db").absolute()))
         cursor = conn.cursor()
@@ -1000,10 +994,10 @@ if __name__ == "__main__":
     try:
         args, kwargs = fire.Fire(lambda *args, **kwargs: [args, kwargs])
         if "help" in kwargs:
-            print(help(AnkiReformulator))
+            print(help(AnkiReformulator), file=sys.stderr)
         else:
             whi(f"Launching reformulator.py with args '{args}' and kwargs '{kwargs}'")
             AnkiReformulator(*args, **kwargs)
+            sync_anki()
     except Exception:
-        sync_anki()
         raise
