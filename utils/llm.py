@@ -28,6 +28,7 @@ def load_api_keys() -> Dict:
     Path("API_KEYS").mkdir(exist_ok=True)
     if not list(Path("API_KEYS").iterdir()):
         shared.red("## No API_KEYS found in API_KEYS")
+        raise Exception("Need to write API KEYS to API_KEYS/")
     api_keys = {}
     for apifile in Path("API_KEYS").iterdir():
         keyname = f"{apifile.stem.upper()}_API_KEY"
