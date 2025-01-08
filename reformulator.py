@@ -385,7 +385,7 @@ class AnkiReformulator:
                 return func(*args, **kwargs)
             except Exception as err:
                 addtags(nid=note.name, tags="AnkiReformulator::FAILED")
-                red(f"Error when running self.{self.mode}: '{err}'")
+                red(f"Error when running self.{func.__name__}: '{err}'")
                 return str(err)
 
         # getting all the new values in parallel and using caching
@@ -525,8 +525,7 @@ class AnkiReformulator:
                 elif d["role"] == "user":
                     newcontent = self.dataset[i + 1]["content"]
                 else:
-                    raise ValueError(
-                        f"Unexpected role of message in dataset: {d}")
+                    raise ValueError(f"Unexpected role of message in dataset: {d}")
                 skip_llm = True
                 break
 
@@ -602,8 +601,11 @@ class AnkiReformulator:
         log["note_field_formattednewcontent"] = formattednewcontent
         log["status"] = STAT_OK_REFORM
 
-        if iscloze(content + newcontent + formattednewcontent):
+        if iscloze(content) and iscloze( newcontent + formattednewcontent):
             # check that no cloze were lost
+            # TODO: Bug here: `iscloze` can return true if the new content is a
+            # close, but if the original content is not a cloze, then this
+            # fails
             for cl in getclozes(content):
                 cl = cl.split("::")[0] + "::"
                 assert cl.startswith("{{c") and cl in content

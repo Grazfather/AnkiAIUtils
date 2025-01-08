@@ -18,7 +18,7 @@ def iscloze(text: str) -> bool:
 
 def getclozes(text: str) -> List[str]:
     "return the cloze found in the text. Should only be called on cloze notes"
-    assert iscloze(text)
+    assert iscloze(text), f"Text '{text}' does not contain a cloze"
     return re.findall(CLOZE_REGEX, text)
 
 
