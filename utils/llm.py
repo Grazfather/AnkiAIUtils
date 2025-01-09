@@ -27,8 +27,7 @@ sd_price = {"15": 0.001,
             "30": 0.002,
             "50": 0.004,
             "100": 0.007,
-            # NOTE: Why is this one a string?
-            "150": "0.01"}
+            "150": 0.01}
 
 tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
 llm_cache = Memory(".cache", verbose=0)
@@ -122,8 +121,7 @@ def wrapped_model_name_matcher(model: str) -> str:
         return match[0]
     else:
         print(f"Couldn't match the modelname {model} to any known model. "
-              "Continuing but this will probably crash DocToolsLLM further "
-              "down the code.")
+              "Continuing but this will probably crash further down the code.")
         return model
 
 

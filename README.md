@@ -391,19 +391,15 @@ First, ensure that you API keys are set in you env variables.
 
 Next, install the [AnkiConnect](https://ankiweb.net/shared/info/2055492159) Anki addon if you don't already have it.
 
+
 #### Reformulator
 
-Next... create a database? it expects a sqlite db in databases/reformulator/reformulator?
-* Can handle it in code
-
-Next... something about adding a field called `AnkiReformulator` to notes you want to change?
-* Do you have to create a special note type for this to work?
-
+The reformulator expects the notes you modify to have a specific field present so that it can save the old versions and add logging. Modify the note type you want to reformulate by adding a `AnkiReformulator` field to it. 
 The Reformulator can be run from the command line:
 
 ```bash
 python reformulator.py \
-    --query "note:Basic (rated:2:1 OR rated:2:2) -is:suspended" \
+    --query "note:Cloze (rated:2:1 OR rated:2:2) -is:suspended" \
     --dataset_path "examples/reformulator_dataset.txt" \
     --string_formatting "examples/string_formatting.py" \
     --ntfy_url "ntfy.sh/YOUR_TOPIC" \

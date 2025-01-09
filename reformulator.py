@@ -201,7 +201,7 @@ class AnkiReformulator:
                 print(json.dumps(db_content, ensure_ascii=False, indent=4))
             return
         else:
-            # sync_anki()
+            sync_anki()
             assert query is not None, "Must specify --query"
             assert dataset_path is not None, "Must specify --dataset_path"
         litellm.set_verbose = verbose
@@ -271,9 +271,8 @@ class AnkiReformulator:
             self.db_content = self.load_db()
             assert self.db_content, "Could not create database"
 
-        # TODO: What should be in the database normally? This fails with an empty database
         whi("Computing estimated costs")
-        # self.compute_cost(self.db_content)
+        self.compute_cost(self.db_content)
 
         # load dataset
         whi("Loading dataset")
@@ -295,8 +294,7 @@ class AnkiReformulator:
             red(f"Found {len(nids)} notes with tag AnkiReformulator::DOING : {nids}")
 
         # find notes ids for the specific note type
-        nids = anki(action="findNotes", query="note:AnkiAITest")
-        # nids = anki(action="findNotes", query=query)
+        nids = anki(action="findNotes", query=query)
         assert nids, f"No notes found for the query '{query}'"
 
         # find the field names for this note type
@@ -304,8 +302,7 @@ class AnkiReformulator:
                       notes=[int(nids[0])])[0]["fields"]
         assert "AnkiReformulator" in fields.keys(), \
                 "The notetype to edit must have a field called 'AnkiReformulator'"
-        # NOTE: This gets the first field. Is that what we want? Or do we specifically want the AnkiReformulator field?
-        self.field_name = list(fields.keys())[0]
+        self.field_name = list(fields.keys())[self.field_index]
 
         if self.exclude_media:
             # now find notes ids after excluding the img in the important field
@@ -316,7 +313,7 @@ class AnkiReformulator:
             query += f' -{self.field_name}:"*http://*"'
             query += f' -{self.field_name}:"*https://*"'
 
-        whi(f"Query to find note: {query}")
+        whi(f"Query to find note: '{query}'")
         nids = anki(action="findNotes", query=query)
         assert nids, f"No notes found for the query '{query}'"
         whi(f"Found {len(nids)} notes")
@@ -357,7 +354,7 @@ class AnkiReformulator:
                 else:
                     assert not tag.lower().startswith("ankireformulator")
 
-        # check if too many tokens
+        # check if required tokens are higher than our limits
         tkn_sum = sum(tkn_len(d["content"]) for d in self.dataset)
         tkn_sum += sum(tkn_len(replace_media(content=note["fields"][self.field_name]["value"],
                                              media=None,
@@ -442,12 +439,11 @@ class AnkiReformulator:
         This is used to know if something went wrong.
         """
         n_db = len(db_content)
-        red(f"Number of entries in databases/reforumulator/reformulator.db: {n_db}")
+        red(f"Number of entries in databases/reformulator/reformulator.db: {n_db}")
         dol_costs = []
         dol_missing = 0
         for dic in db_content:
-            # TODO: Mode isn't a field in the reformulator database dictionaries table
-            if dic["mode"] != "reformulate":
+            if self.mode != "reformulate":
                 continue
             try:
                 dol = float(dic["dollar_price"])
@@ -640,7 +636,7 @@ class AnkiReformulator:
 
         new_minilog = rtoml.dumps(minilog, pretty=True)
         new_minilog = new_minilog.strip().replace("\n", "<br>")
-        previous_minilog = note["fields"]["AnkiReformulator"]["value"].strip()
+        previous_minilog = note["fields"].get("AnkiReformulator", {}).get("value", "").strip()
         if previous_minilog:
             new_minilog += "<!--SEPARATOR-->"
             new_minilog += "<br><br><details><summary>Older minilog</summary>"
@@ -670,6 +666,7 @@ class AnkiReformulator:
             nid,
             fields={
                 self.field_name: log["note_field_formattednewcontent"],
+                # TODO: Might be nice to not require this
                 "AnkiReformulator": new_minilog,
             },
         )

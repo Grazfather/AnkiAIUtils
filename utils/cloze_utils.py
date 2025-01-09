@@ -27,6 +27,7 @@ def cloze_input_parser(cloze: str) -> str:
     if you use weird formatting that mess with LLMs"""
     assert iscloze(cloze), f"Invalid cloze: {cloze}"
 
+    # TODO: What is this?
     cloze = cloze.replace("\xa0", " ")
 
     # make newlines consistent
@@ -36,7 +37,6 @@ def cloze_input_parser(cloze: str) -> str:
 
     # make spaces consitent
     cloze = cloze.replace("&nbsp;", " ")
-
 
     # misc
     cloze = cloze.replace("&gt;", ">")
@@ -57,9 +57,12 @@ def cloze_output_parser(cloze: str) -> str:
     cloze = cloze.strip()
 
     # make sure all newlines are consistent for now
+    # TODO: You mean <br/>?
     cloze = cloze.replace("</br>", "<br>")
+    cloze = cloze.replace("<br/>", "<br>")
     cloze = cloze.replace("\r", "<br>")
-    cloze = cloze.replace("<br>", "\n")
+    # TODO: Not needed
+    # cloze = cloze.replace("<br>", "\n")
 
     # make sure all spaces are consistent
     cloze = cloze.replace("&nbsp;", " ")
@@ -68,4 +71,3 @@ def cloze_output_parser(cloze: str) -> str:
     cloze = cloze.replace("\n", "<br>")
 
     return cloze
-
