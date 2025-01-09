@@ -269,12 +269,12 @@ class AnkiReformulator:
             if self.exclude_version:
                 query += f" -AnkiReformulator:\"*version*=*'{self.VERSION}'*\""
 
-        # load db just in case
+        # load db just in case, and create one if it doesn't already exist
         self.db_content = self.load_db()
         if not self.db_content:
             red("Empty database. If you have already ran anki_reformulator "
                 "before then something went wrong!")
-            whi("Trying to create a new database")
+            whi("Creating a empty database")
             self.save_to_db({})
             self.db_content = self.load_db()
             assert self.db_content, "Could not create database"
@@ -507,7 +507,7 @@ class AnkiReformulator:
         # reformulate the content
         content = note["fields"][self.field_name]["value"]
         log["note_field_content"] = content
-        formattedcontent = self.cloze_input_parser(content) if iscloze(content) else content
+        formattedcontent = self.cloze_input_parser(content)
         log["note_field_formattedcontent"] = formattedcontent
 
         # if the card is in the dataset, just take the dataset value directly
@@ -537,11 +537,13 @@ class AnkiReformulator:
         fc, media = replace_media(
             content=formattedcontent,
             media=None,
-            mode="remove_media",
-        )
+            mode="remove_media")
         log["media"] = media
 
-        if not skip_llm:
+        if skip_llm:
+            log["llm_answer"] = {"Skipped": True}
+            log["dollar_price"] = 0
+        else:
             dataset = copy.deepcopy(self.dataset)
             curr_mess = [{"role": "user", "content": fc}]
             dataset = semantic_prompt_filtering(
@@ -553,8 +555,7 @@ class AnkiReformulator:
                 embedding_model=self.embedding_model,
                 whi=whi,
                 yel=yel,
-                red=red,
-            )
+                red=red)
             dataset += curr_mess
 
             assert dataset[0]["role"] == "system", "First message is not from system!"
@@ -597,20 +598,14 @@ class AnkiReformulator:
                 )
             else:
                 log["dollar_price"] = "?"
-        else:
-            log["llm_answer"] = {"Skipped": True}
-            log["dollar_price"] = 0
 
         log["note_field_newcontent"] = newcontent
-        formattednewcontent = self.cloze_output_parser(newcontent) if iscloze(newcontent) else newcontent
+        formattednewcontent = self.cloze_output_parser(newcontent)
         log["note_field_formattednewcontent"] = formattednewcontent
         log["status"] = STAT_OK_REFORM
 
         if iscloze(content) and iscloze( newcontent + formattednewcontent):
             # check that no cloze were lost
-            # TODO: Bug here: `iscloze` can return true if the new content is a
-            # close, but if the original content is not a cloze, then this
-            # fails
             for cl in getclozes(content):
                 cl = cl.split("::")[0] + "::"
                 assert cl.startswith("{{c") and cl in content
@@ -734,18 +729,14 @@ class AnkiReformulator:
         ]
 
         if not entries:
-            red(
-                f"Entry not found for note {nid}. Looking for the content of "
-                "the field AnkiReformulator"
-            )
+            red(f"Entry not found for note {nid}. Looking for the content of "
+                "the field AnkiReformulator")
             logfield = note["fields"]["AnkiReformulator"]["value"]
             logfield = logfield.split(
                 "<!--SEPARATOR-->")[0]  # keep most recent
             if not logfield.strip():
-                raise Exception(
-                    f"Note {nid} was not found in the db and its "
-                    "AnkiReformulator field was empty."
-                )
+                raise Exception(f"Note {nid} was not found in the db and its "
+                                "AnkiReformulator field was empty.")
 
             # replace the [[c1::cloze]] by {{c1::cloze}}
             logfield = logfield.replace("]]", "}}")
@@ -755,7 +746,7 @@ class AnkiReformulator:
 
             # parse old content
             buffer = []
-            for i, line in enumerate(logfield.split("<br>")):
+            for line in logfield.split("<br>"):
                 if buffer:
                     try:
                         _ = rtoml.loads("".join(buffer + [line]))
@@ -774,10 +765,12 @@ class AnkiReformulator:
 
             # parse new content at the time
             buffer = []
-            for i, line in enumerate(logfield.split("<br>")):
+            for line in logfield.split("<br>"):
                 if buffer:
                     try:
-                        _ = rtoml.loads("".join(buffer + [line]))
+                        # TODO: What are you trying to do here? Just check that adding the line keeps valid toml?
+                        # If so, you should catch the specific exception that the load function raises on error
+                        rtoml.loads("".join(buffer + [line]))
                         buffer.append(line)
                         continue
                     except Exception:
@@ -931,10 +924,8 @@ class AnkiReformulator:
 
         # remove TO_RESET tag if present
         removetags(nid, "AnkiReformulator::TO_RESET")
-
         # remove Done tag
         removetags(nid, "AnkiReformulator::Done")
-
         # remove DOING tag
         removetags(nid, "AnkiReformulator::RESETTING")
 
@@ -987,11 +978,8 @@ class AnkiReformulator:
         cursor = conn.cursor()
         cursor.execute("SELECT data FROM dictionaries")
         rows = cursor.fetchall()
-        dictionaries = []
-        for row in rows:
-            dictionary = json.loads(zlib.decompress(row[0]))
-            dictionaries.append(dictionary)
-        return dictionaries
+        # TODO: Why do you compress? This just makes it more difficult to debug
+        return [json.loads(zlib.decompress(row[0]) for row in rows]
 
 
 if __name__ == "__main__":

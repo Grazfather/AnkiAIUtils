@@ -23,11 +23,12 @@ def getclozes(text: str) -> List[str]:
 
 
 def cloze_input_parser(cloze: str) -> str:
-    """edits the cloze from anki before sending it to the LLM. This is useful
-    if you use weird formatting that mess with LLMs"""
-    assert iscloze(cloze), f"Invalid cloze: {cloze}"
+    """edit the cloze from anki before sending it to the LLM. This is useful
+    if you use weird formatting that mess with LLMs.
+    If the note content is not a cloze, then return it unmodified."""
+    if not iscloze(cloze):
+        return cloze
 
-    # TODO: What is this?
     cloze = cloze.replace("\xa0", " ")
 
     # make newlines consistent
