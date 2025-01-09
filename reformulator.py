@@ -222,7 +222,12 @@ class AnkiReformulator:
             parallel = int(parallel)
         main_field_index = int(main_field_index)
         assert main_field_index >= 0, "invalid field_index"
+        self.base_query = query
+        self.dataset_path = dataset_path
         self.mode = mode
+        self.exclude_done = exclude_done
+        self.exclude_version = exclude_version
+
         if string_formatting:
             red(f"Loading specific string formatting from {string_formatting}")
             cloze_input_parser, cloze_output_parser = load_formatting_funcs(
@@ -254,11 +259,14 @@ class AnkiReformulator:
         else:
             raise Exception(f"{llm} not found in llm_price")
         self.verbose = verbose
-        if mode == "reformulate":
-            if exclude_done:
+
+    def reformulate(self):
+        query = self.base_query
+        if self.mode == "reformulate":
+            if self.exclude_done:
                 query += " -AnkiReformulator::Done::*"
 
-            if exclude_version:
+            if self.exclude_version:
                 query += f" -AnkiReformulator:\"*version*=*'{self.VERSION}'*\""
 
         # load db just in case
@@ -276,7 +284,7 @@ class AnkiReformulator:
 
         # load dataset
         whi("Loading dataset")
-        dataset = load_dataset(dataset_path)
+        dataset = load_dataset(self.dataset_path)
         # check that each note is valid but exclude the system prompt, which is
         # the first entry
         for id, d in enumerate(dataset[1:]):
@@ -371,9 +379,9 @@ class AnkiReformulator:
                                                  f"which is higher than the limit of {n_note_limit}")
 
         if self.mode == "reformulate":
-            func = self.reformulate
+            func = self.reformulate_note
         elif self.mode == "reset":
-            func = self.reset
+            func = self.reset_note
         else:
             raise ValueError(f"Unknown mode {self.mode}")
 
@@ -469,7 +477,7 @@ class AnkiReformulator:
         elif dol_costs:
             self._cost_so_far = dol_total
 
-    def reformulate(self, nid: int, note: pd.Series) -> Dict:
+    def reformulate_note(self, nid: int, note: pd.Series) -> Dict:
         """Generate a reformulated version of a note's content using an LLM.
 
         Parameters
@@ -686,7 +694,7 @@ class AnkiReformulator:
         # remove DOING tag
         removetags(nid, "AnkiReformulator::DOING")
 
-    def reset(self, nid: int, note: pd.Series) -> Dict:
+    def reset_note(self, nid: int, note: pd.Series) -> Dict:
         """Reset a note back to its state before reformulation.
 
         Parameters
@@ -993,7 +1001,8 @@ if __name__ == "__main__":
             print(help(AnkiReformulator), file=sys.stderr)
         else:
             whi(f"Launching reformulator.py with args '{args}' and kwargs '{kwargs}'")
-            AnkiReformulator(*args, **kwargs)
+            r = AnkiReformulator(*args, **kwargs)
+            r.reformulate()
             sync_anki()
     except AssertionError as e:
         red(e)
