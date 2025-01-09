@@ -302,7 +302,11 @@ class AnkiReformulator:
                       notes=[int(nids[0])])[0]["fields"]
         assert "AnkiReformulator" in fields.keys(), \
                 "The notetype to edit must have a field called 'AnkiReformulator'"
-        self.field_name = list(fields.keys())[self.field_index]
+        try:
+            self.field_name = list(fields.keys())[self.field_index]
+        except IndexError:
+            raise AssertionError(f"main_field_index {self.field_index} is invalid. "
+                                 f"Note only has {len(fields.keys())} fields!")
 
         if self.exclude_media:
             # now find notes ids after excluding the img in the important field
