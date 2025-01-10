@@ -979,7 +979,7 @@ class AnkiReformulator:
         cursor.execute("SELECT data FROM dictionaries")
         rows = cursor.fetchall()
         # TODO: Why do you compress? This just makes it more difficult to debug
-        return [json.loads(zlib.decompress(row[0]) for row in rows]
+        return [json.loads(zlib.decompress(row[0])) for row in rows]
 
 
 if __name__ == "__main__":
